@@ -43,7 +43,7 @@ module Kojo #:nodoc:
               # should also be unique. We handle that in the set_unique_attributes!
               # method with a sequence.
               next if !self.unique_validations.select{|v| v.name == m.name }.empty?
-              # Set test data for every required column. Test data is based on the column name
+              # Set test data for every required column. Test data is based on the column name,
               # prepended with test.
               instance.send("#{m.name}=", "test_#{m.name}")
             end
@@ -54,6 +54,7 @@ module Kojo #:nodoc:
           # We need to sequence those fields, so 
           # all the data we generate is totally unique.
           def set_unique_attributes!(instance)
+            self.unique_validations.each { |m| instance.send("#{m.name}=", "test_#{m.name}_#{Sequence.instance.next}") }
           end
 
           def create_associations(instance)

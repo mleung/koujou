@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'rubygems'
 require 'active_record'
+require 'kojo/sequence'
 require 'kojo/builder'
 require 'kojo/validation_reflection'
 

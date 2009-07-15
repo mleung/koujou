@@ -36,6 +36,7 @@ class ActiveRecordTestConnector
         create_table "users", :force => true do |t|
           t.column "name",  :text
           t.column "email", :text
+          t.column "age", :integer
         end
       end
     end

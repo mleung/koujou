@@ -45,21 +45,30 @@ module Kojo #:nodoc:
               next if !self.unique_validations.select{|v| v.name == m.name }.empty?
               # Set test data for every required column. Test data is based on the column name,
               # prepended with test.
-              instance.send("#{m.name}=", "test_#{m.name}")
+              instance.send("#{m.name}=", generate_data_for_column_type(m))
             end
           end
 
           # This queries the base class for anything
           # that has a uniqueness_of validation.
           # We need to sequence those fields, so 
-          # all the data we generate is totally unique.
+          # all the data we generate is unique.
           def set_unique_attributes!(instance)
-            self.unique_validations.each { |m| instance.send("#{m.name}=", "test_#{m.name}_#{Sequence.instance.next}") }
+            self.unique_validations.each { |m| instance.send("#{m.name}=", generate_data_for_column_type(m, true)) }
           end
 
           def create_associations(instance)
           end
           
+          def generate_data_for_column_type(validation, sequenced = false)
+            db_type = validation.active_record.columns_hash["#{validation.name}"].type
+            case db_type
+            when :text
+              sequenced ? "test_#{validation.name}_#{Sequence.instance.next}" : "text_#{validation.name}"
+            when :integer
+              
+            end
+          end
       end
       
     end

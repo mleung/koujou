@@ -71,7 +71,7 @@ module Kojo #:nodoc:
             db_type = validation.active_record.columns_hash["#{validation.name}"].type
             case db_type
             when :text
-              sequenced ? "test_#{validation.name}_#{Sequence.instance.next}" : "text_#{validation.name}"
+              sequenced ? "test_#{validation.name}_#{Sequence.instance.next}" : "test_#{validation.name}"
             when :integer
               
             end

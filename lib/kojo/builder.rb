@@ -39,11 +39,11 @@ module Kojo #:nodoc:
           end
         
           def set_required_attributes!(instance)
-            constantize(instance).required_validations.each do |m|
+            instance.class.required_validations.each do |m|
               # We want to skip over setting any required fields if the field
               # should also be unique. We handle that in the set_unique_attributes!
               # method with a sequence.
-              next if !constantize(instance).unique_validations.select{|v| v.name == m.name }.empty?
+              next if ! instance.class.unique_validations.select{|v| v.name == m.name }.empty?
               instance.send("#{m.name}=", generate_data_for_column_type(m))
             end
           end
@@ -53,7 +53,7 @@ module Kojo #:nodoc:
           # We need to sequence those fields, so 
           # all the data we generate is unique.
           def set_unique_attributes!(instance)
-            constantize(instance).unique_validations.each {|m| instance.send("#{m.name}=", generate_data_for_column_type(m, true)) }
+            instance.class.unique_validations.each {|m| instance.send("#{m.name}=", generate_data_for_column_type(m, true)) }
           end
 
           def create_associations(instance)
@@ -61,7 +61,7 @@ module Kojo #:nodoc:
             # We can't just use self, because this is essentially recursive, and it could be the class in has_many
             # that is calling it. We just get all the has_many associations, then create a corresponding record for
             # them. Done, and done. 
-            constantize(instance).reflect_on_all_associations(:has_many).each do |a|
+            instance.class.reflect_on_all_associations(:has_many).each do |a|
               instance.instance_eval(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
             end
           end
@@ -77,9 +77,6 @@ module Kojo #:nodoc:
             end
           end
           
-          def constantize(instance)
-            Kernel.const_get(instance.class.to_s)
-          end
       end
       
     end

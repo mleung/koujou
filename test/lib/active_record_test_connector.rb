@@ -38,6 +38,10 @@ class ActiveRecordTestConnector
           t.column "email", :text
           t.column "age", :integer
         end
+        create_table "posts", :force => true do |t|
+          t.column "name",  :text
+          t.column "user_id", :integer
+        end
       end
     end
      

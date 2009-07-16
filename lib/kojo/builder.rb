@@ -58,6 +58,9 @@ module Kojo #:nodoc:
           end
 
           def create_associations(instance)
+            Kernel.const_get(instance.class.to_s).reflect_on_all_associations(:has_many).each do |a|
+              instance.instance_eval(a.name.to_s) << build_model_instance(Kernel.const_get(a.name.to_s.singularize.classify)) 
+            end
           end
           
           def generate_data_for_column_type(validation, sequenced = false)

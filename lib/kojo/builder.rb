@@ -24,13 +24,13 @@ module Kojo #:nodoc:
 
         protected
           def generate_instance(create)
-            instance = build_model_instance
+            instance = build_model_instance(self)
             instance.save if create
             instance
           end
         
-          def build_model_instance
-            instance = self.new
+          def build_model_instance(klass)
+            instance = klass.new
             set_required_attributes!(instance)
             set_unique_attributes!(instance)
             create_associations(instance)

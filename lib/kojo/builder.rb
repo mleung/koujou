@@ -30,6 +30,7 @@ module Kojo #:nodoc:
           end
         
           def build_model_instance(klass)
+            klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
             instance = klass.new
             set_required_attributes!(instance)
             set_unique_attributes!(instance)
@@ -63,7 +64,7 @@ module Kojo #:nodoc:
             # that is calling it. We just get all the has_many associations, then create a corresponding record for
             # them. Done, and done. 
             Kernel.const_get(instance.class.to_s).reflect_on_all_associations(:has_many).each do |a|
-              instance.instance_eval(a.name.to_s) << build_model_instance(Kernel.const_get(a.name.to_s.singularize.classify)) 
+              instance.instance_eval(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
             end
           end
           

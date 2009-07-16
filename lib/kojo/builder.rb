@@ -58,6 +58,10 @@ module Kojo #:nodoc:
           end
 
           def create_associations(instance)
+            # This looks sort of hairy, but it's quite simple. So we take the instance, and turn it into a class.
+            # We can't just use self, because this is essentially recursive, and it could be the class in has many
+            # that is calling it. We just get all the has_many associations, then create a corresponding record for
+            # them. Done, and done. 
             Kernel.const_get(instance.class.to_s).reflect_on_all_associations(:has_many).each do |a|
               instance.instance_eval(a.name.to_s) << build_model_instance(Kernel.const_get(a.name.to_s.singularize.classify)) 
             end

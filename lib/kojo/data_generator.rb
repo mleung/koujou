@@ -3,11 +3,11 @@ module Kojo #:nodoc:
     
     def initialize(sequenced, validation)
       @sequenced = sequenced
+      # Validation is actually a ActiveRecord::Reflection::MacroReflection
       @validation = validation
     end
 
     def generate_data_for_column_type
-      # Validation is actually a ActiveRecord::Reflection::MacroReflection
       db_type = @validation.active_record.columns_hash["#{@validation.name}"].type
       # Since the method names are all based on the db types, we'll just go ahead and
       # dynamically call all those. 
@@ -16,7 +16,6 @@ module Kojo #:nodoc:
     
     def generate_string
       # FIXME: This is going to get nasty quick. Refactor.
-      output = ''
       return format_if_sequenced(Faker::Internet.email) if @validation.name =~ /email+?/
       return format_if_sequenced(Faker::Name.first_name) if @validation.name == 'first_name'
       return format_if_sequenced(Faker::Name.last_name) if @validation.name == 'last_name'

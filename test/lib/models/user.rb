@@ -1,7 +1,11 @@
 class User < ActiveRecord::Base
-  validates_presence_of :name, :age, :salary, :hired_on, :email, :first_name, :last_name
+  validates_presence_of :name, :age, :salary, :hired_on, :email, :first_name, :last_name, :password
   validates_uniqueness_of :name
+  validates_confirmation_of :password
   
   has_many :posts
+  
+  attr_accessible :password, :password_confirmation
+  
   
 end

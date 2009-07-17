@@ -36,6 +36,11 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_equal u1.name, u2.name
     end
     
+    should 'have a password confirmation automatically set' do
+      u = User.kojo
+      assert_not_nil u.password_confirmation
+    end
+    
     should 'all me to override the model attributes' do
       namae = 'One Factory to Rule them all'
       p = Post.kojo(true, :name => namae)
@@ -51,7 +56,7 @@ class TestBuilder < Test::Unit::TestCase
       assert !u.new_record?
     end
     
-    should 'all me to override the model attributes' do
+    should 'allow me to override the model attributes' do
       comment = 'your post is epic fail'
       c = Comment.create_kojo(:body => comment)
       assert_equal comment, c.body

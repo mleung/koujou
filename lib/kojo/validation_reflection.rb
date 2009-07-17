@@ -92,7 +92,7 @@ module Kojo # :nodoc:
           end
         end
         
-        # Two convenience methods added in by Mike.
+        # A few convenience methods added in by Mike.
         
         def unique_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_uniqueness_of }
@@ -100,6 +100,10 @@ module Kojo # :nodoc:
 
         def required_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_presence_of }
+        end
+
+        def confirmation_validations
+          reflect_on_all_validations.select{|v| v.macro == :validates_confirmation_of }
         end
 
         private

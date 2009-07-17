@@ -16,15 +16,10 @@ module Kojo #:nodoc:
     
     def generate_string
       # FIXME: This is going to get nasty quick. Refactor this.
-      if @validation.name =~ /email+?/
-        return Faker::Internet.email
-      end
-      if @validation.name == 'first_name'
-        return Faker::Name.first_name
-      end
-      if @validation.name == 'last_name'
-        return Faker::Name.last_name
-      end
+      output = ''
+      return Faker::Internet.email if @validation.name =~ /email+?/
+      return Faker::Name.first_name if @validation.name == 'first_name'
+      return Faker::Name.last_name if @validation.name == 'last_name'
       # If we don't match any standard stuff, just return a regular string.
       bs = Faker::Company.bs
       @sequenced ? "#{bs}_#{Sequence.instance.next}" : bs

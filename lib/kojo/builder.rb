@@ -75,7 +75,7 @@ module Kojo #:nodoc:
             # associations on the current instance using introspection, and build up and assign
             # some models to each.
             instance.class.reflect_on_all_associations(:has_many).each do |a|
-              instance.instance_eval(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
+              instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
             end
           end
           

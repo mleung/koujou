@@ -15,11 +15,11 @@ module Kojo #:nodoc:
     end
     
     def generate_string
-      # FIXME: This is going to get nasty quick. Refactor this.
+      # FIXME: This is going to get nasty quick. Refactor.
       output = ''
-      return Faker::Internet.email if @validation.name =~ /email+?/
-      return Faker::Name.first_name if @validation.name == 'first_name'
-      return Faker::Name.last_name if @validation.name == 'last_name'
+      return format_if_sequenced(Faker::Internet.email) if @validation.name =~ /email+?/
+      return format_if_sequenced(Faker::Name.first_name) if @validation.name == 'first_name'
+      return format_if_sequenced(Faker::Name.last_name) if @validation.name == 'last_name'
       # If we don't match any standard stuff, just return a regular string.
       bs = Faker::Company.bs
       @sequenced ? "#{bs}_#{Sequence.instance.next}" : bs
@@ -49,6 +49,9 @@ module Kojo #:nodoc:
         @sequenced ? random + (Sequence.instance.next * rand(2)) : random
       end
 
-    
+      def format_if_sequenced(val)
+        @sequenced ? "#{val} #{Sequence.instance.next}" : val
+      end
+      
   end
 end

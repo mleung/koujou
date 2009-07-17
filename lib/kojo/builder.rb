@@ -10,30 +10,34 @@ module Kojo #:nodoc:
 
       module ClassMethods #:nodoc:
       
-        def kojo(create = true)
-          generate_instance(create)
+        def kojo(create = true, attributes = nil)
+          generate_instance(create, attributes)
         end
       
-        def new_kojo
-          kojo(false)
+        def new_kojo(attributes = nil)
+          kojo(false, attributes)
         end
       
-        def create_kojo
-          kojo(true)
+        def create_kojo(attributes = nil)
+          kojo(true, attributes)
         end
 
         protected
-          def generate_instance(create)
-            instance = build_model_instance(self)
+          def generate_instance(create, attributes)
+            instance = build_model_instance(self, attributes)
             instance.save if create 
             instance
           end
         
-          def build_model_instance(klass)
+          def build_model_instance(klass, attributes = nil)
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
             instance = klass.new
-            set_required_attributes!(instance)
-            set_unique_attributes!(instance)
+            if attributes.nil?
+              set_required_attributes!(instance)
+              set_unique_attributes!(instance)
+            else
+              instance.attributes = attributes
+            end
             create_associations(instance)
             instance
           end

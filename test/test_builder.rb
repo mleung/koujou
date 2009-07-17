@@ -36,6 +36,13 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_equal u1.name, u2.name
     end
     
+    should 'all me to override the model attributes' do
+      namae = 'One Factory to Rule them all'
+      p = Post.kojo(true, :name => namae)
+      assert_equal namae, p.name
+    end
+    
+    
   end
   
   context 'on sending the create_kojo message' do
@@ -45,6 +52,13 @@ class TestBuilder < Test::Unit::TestCase
       assert !u.new_record?
     end
     
+    should 'all me to override the model attributes' do
+      comment = 'your post is epic fail'
+      c = Comment.create_kojo(:body => comment)
+      assert_equal comment, c.body
+    end
+    
+    
   end
   
   context 'on sending the new_kojo message' do
@@ -52,6 +66,12 @@ class TestBuilder < Test::Unit::TestCase
     should 'reutrn a new record' do
       u = User.new_kojo
       assert u.new_record?
+    end
+    
+    should 'all me to override the model attributes' do
+      clever = 'Whatver\'s clever'
+      p = Post.new_kojo(:name => clever)
+      assert_equal clever, p.name
     end
     
   end

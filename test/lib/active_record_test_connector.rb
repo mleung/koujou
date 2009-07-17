@@ -47,6 +47,10 @@ class ActiveRecordTestConnector
           t.text "body"
           t.integer "post_id"
         end
+        create_table "profiles", :force => true do |t|
+          t.integer "user_id"
+          t.boolean "likes_cheese"
+        end
       end
     end
      

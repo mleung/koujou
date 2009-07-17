@@ -72,10 +72,17 @@ module Kojo #:nodoc:
 
           def create_associations(instance)
             # This looks sort of hairy, but it's actually quite simple. We just loop through all the has_many
-            # associations on the current instance using introspection, and build up and assign
+            # or has_one associations on the current instance using introspection, and build up and assign
             # some models to each.
-            instance.class.reflect_on_all_associations(:has_many).each do |a|
-              instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
+            instance.class.reflect_on_all_associations.each do |a|
+              # We don't want to create any models for has_many :through =>
+              next if a.through_reflection
+              if a.macro == :has_many
+                instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
+              end
+              if a.macro == :has_one
+                instance.send("#{a.name.to_s}=", build_model_instance(a.name.to_s.singularize.classify))
+              end
             end
           end
           

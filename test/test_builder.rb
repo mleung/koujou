@@ -81,14 +81,20 @@ class TestBuilder < Test::Unit::TestCase
   
   context 'on creating associations' do
     
+    setup do
+      @u = User.kojo
+    end
+    
     should 'have a post class associated with a user' do
-      u = User.kojo
-      assert_equal 1, u.posts.size
+      assert_equal 1, @u.posts.size
     end
     
     should 'generate a comment class associated with posts, which is associated with users' do
-      u = User.create_kojo
-      assert_equal 1, u.posts.first.comments.size
+      assert_equal 1, @u.posts.first.comments.size
+    end
+    
+    should 'have a profile through the has_one association' do
+      assert_not_nil @u.profile
     end
     
   end

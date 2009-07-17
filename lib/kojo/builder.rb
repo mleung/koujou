@@ -48,13 +48,13 @@ module Kojo #:nodoc:
               # should also be unique. We handle that in the set_unique_attributes!
               # method with a sequence.
               next if !instance.class.unique_validations.select{|u| u.name == v.name }.empty?
-              instance.send("#{v.name}=", DataGenerator.generate_data_for_column_type(v))
+              instance.send("#{v.name}=", DataGenerator.new(false).generate_data_for_column_type(v))
             end
           end
 
           def set_unique_attributes!(instance)
             instance.class.unique_validations.each {|v| instance.send("#{v.name}=",
-                                                  DataGenerator.generate_data_for_column_type(v, true)) }
+                                                  DataGenerator.new(true).generate_data_for_column_type(v)) }
           end
 
           def create_associations(instance)

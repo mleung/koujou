@@ -53,7 +53,8 @@ module Kojo #:nodoc:
           end
 
           def set_unique_attributes!(instance)
-            instance.class.unique_validations.each {|v| instance.send("#{v.name}=", DataGenerator.generate_data_for_column_type(v, true)) }
+            instance.class.unique_validations.each {|v| instance.send("#{v.name}=",
+                                                  DataGenerator.generate_data_for_column_type(v, true)) }
           end
 
           def create_associations(instance)

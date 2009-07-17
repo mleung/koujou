@@ -10,7 +10,7 @@ module Kojo #:nodoc:
     def generate_data_for_column_type
       db_type = @validation.active_record.columns_hash["#{@validation.name}"].type
       # Since the method names are all based on the db types, we'll just go ahead and
-      # dynamically call all those. 
+      # dynamically call the appropriate one. 
       send("generate_#{db_type}")
     end
     

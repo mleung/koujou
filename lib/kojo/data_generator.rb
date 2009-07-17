@@ -19,9 +19,8 @@ module Kojo #:nodoc:
       return format_if_sequenced(Faker::Internet.email) if @validation.name =~ /email+?/
       return format_if_sequenced(Faker::Name.first_name) if @validation.name == 'first_name'
       return format_if_sequenced(Faker::Name.last_name) if @validation.name == 'last_name'
-      # If we don't match any standard stuff, just return a regular string.
-      bs = Faker::Company.bs
-      @sequenced ? "#{bs}_#{Sequence.instance.next}" : bs
+      # If we don't match any standard stuff, just return a regular bs string.
+      format_if_sequenced(Faker::Company.bs)
     end
     
     def generate_text

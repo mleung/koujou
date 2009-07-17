@@ -3,10 +3,10 @@ Manifest.txt
 PostInstall.txt
 README.rdoc
 Rakefile
-lib/kojo.rb
-lib/kojo/active_record_extensions.rb
+lib/koujou.rb
+lib/koujou/active_record_extensions.rb
 script/console
 script/destroy
 script/generate
 test/test_helper.rb
-test/test_kojo.rb
+test/test_koujou.rb

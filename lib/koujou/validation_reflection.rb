@@ -27,12 +27,12 @@ require 'ostruct'
 
 # Based on code by Sebastian Kanthak
 # See http://dev.rubyonrails.org/ticket/861
-module Kojo # :nodoc:
+module Koujou # :nodoc:
   module ActiveRecordExtensions # :nodoc:
     module ValidationReflection # :nodoc:
       
       mattr_accessor :reflected_validations
-      Kojo::ActiveRecordExtensions::ValidationReflection.reflected_validations = %w(
+      Koujou::ActiveRecordExtensions::ValidationReflection.reflected_validations = %w(
          validates_acceptance_of
          validates_associated
          validates_confirmation_of
@@ -46,10 +46,10 @@ module Kojo # :nodoc:
       )
 
       mattr_accessor :in_ignored_subvalidation
-      Kojo::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = false
+      Koujou::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = false
       
       def self.included(base)
-        return if base.kind_of?(Kojo::ActiveRecordExtensions::ValidationReflection::ClassMethods)
+        return if base.kind_of?(Koujou::ActiveRecordExtensions::ValidationReflection::ClassMethods)
         base.extend(ClassMethods)
       end
 
@@ -117,13 +117,13 @@ module Kojo # :nodoc:
         end
         
         def ignoring_subvalidations(ignore)
-          save_ignore = Kojo::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation
-          unless Kojo::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation
-            Kojo::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = ignore
+          save_ignore = Koujou::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation
+          unless Koujou::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation
+            Koujou::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = ignore
             yield
           end
         ensure
-          Kojo::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = save_ignore
+          Koujou::ActiveRecordExtensions::ValidationReflection.in_ignored_subvalidation = save_ignore
         end
       end
 

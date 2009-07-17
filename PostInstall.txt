@@ -1,5 +1,5 @@
 
-For more information on kojo, see http://kojo.rubyforge.org
+For more information on koujou, see http://koujou.rubyforge.org
 
 NOTE: Change this information in PostInstall.txt 
 You can also delete it if you don't want it.

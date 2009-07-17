@@ -1,4 +1,4 @@
-module Kojo #:nodoc:
+module Koujou #:nodoc:
   class DataGenerator
     
     def initialize(sequenced, validation)

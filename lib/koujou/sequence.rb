@@ -1,4 +1,4 @@
-module Kojo #:nodoc:
+module Koujou #:nodoc:
   class Sequence # :nodoc:
     include Singleton
     def initialize

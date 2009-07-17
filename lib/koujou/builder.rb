@@ -1,6 +1,6 @@
 # FIXME: We should probably only duck punch this in if it's the test environment. Figure that out. 
 
-module Kojo #:nodoc:
+module Koujou #:nodoc:
   module ActiveRecordExtensions # :nodoc:
     module Builder # :nodoc:
 
@@ -10,16 +10,16 @@ module Kojo #:nodoc:
 
       module ClassMethods #:nodoc:
       
-        def kojo(create = true, attributes = nil)
+        def koujou(create = true, attributes = nil)
           generate_instance(create, attributes)
         end
       
-        def new_kojo(attributes = nil)
-          kojo(false, attributes)
+        def new_koujou(attributes = nil)
+          koujou(false, attributes)
         end
       
-        def create_kojo(attributes = nil)
-          kojo(true, attributes)
+        def create_koujou(attributes = nil)
+          koujou(true, attributes)
         end
 
         protected

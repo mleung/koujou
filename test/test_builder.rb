@@ -42,7 +42,6 @@ class TestBuilder < Test::Unit::TestCase
       assert_equal namae, p.name
     end
     
-    
   end
   
   context 'on sending the create_kojo message' do
@@ -57,7 +56,6 @@ class TestBuilder < Test::Unit::TestCase
       c = Comment.create_kojo(:body => comment)
       assert_equal comment, c.body
     end
-    
     
   end
   

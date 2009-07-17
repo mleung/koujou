@@ -47,24 +47,19 @@ module Kojo #:nodoc:
               # We want to skip over setting any required fields if the field
               # should also be unique. We handle that in the set_unique_attributes!
               # method with a sequence.
-              next if ! instance.class.unique_validations.select{|v| v.name == m.name }.empty?
+              next if !instance.class.unique_validations.select{|v| v.name == m.name }.empty?
               instance.send("#{m.name}=", generate_data_for_column_type(m))
             end
           end
 
-          # This queries the base class for anything
-          # that has a uniqueness_of validation.
-          # We need to sequence those fields, so 
-          # all the data we generate is unique.
           def set_unique_attributes!(instance)
             instance.class.unique_validations.each {|m| instance.send("#{m.name}=", generate_data_for_column_type(m, true)) }
           end
 
           def create_associations(instance)
-            # This looks sort of hairy, but it's quite simple. So we take the instance, and turn it into a class.
-            # We can't just use self, because this is essentially recursive, and it could be the class in has_many
-            # that is calling it. We just get all the has_many associations, then create a corresponding record for
-            # them. Done, and done. 
+            # This looks sort of hairy, but it's actually quite simple. We just loop through all the has_many
+            # associations on the current instance using introspection, and build up and assign
+            # some models each.
             instance.class.reflect_on_all_associations(:has_many).each do |a|
               instance.instance_eval(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
             end

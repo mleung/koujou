@@ -38,6 +38,7 @@ class ActiveRecordTestConnector
           t.integer "age"
           t.float "salary"
           t.datetime "hired_on"
+          t.boolean "terms_of_service"
         end
         create_table "posts", :force => true do |t|
           t.string "name"

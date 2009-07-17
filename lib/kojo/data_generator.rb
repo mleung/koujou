@@ -38,6 +38,10 @@ module Kojo #:nodoc:
     def generate_datetime
       DateTime.now
     end
+    
+    def generate_boolean
+      true
+    end
           
     protected 
       def generate_number

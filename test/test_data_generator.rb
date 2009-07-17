@@ -41,6 +41,11 @@ class TestDataGenerator < Test::Unit::TestCase
       assert_kind_of DateTime, dt
     end
     
+    should 'always generate true for booleans' do
+      @validation.expects(:name).returns('terms_of_service')
+      assert Kojo::DataGenerator.new(false, @validation).generate_data_for_column_type
+    end
+    
   end
 
 end

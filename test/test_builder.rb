@@ -61,7 +61,7 @@ class TestBuilder < Test::Unit::TestCase
   
   context 'on sending the new_kojo message' do
     
-    should 'reutrn a new record' do
+    should 'return a new record' do
       u = User.new_kojo
       assert u.new_record?
     end

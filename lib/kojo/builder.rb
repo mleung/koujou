@@ -30,6 +30,8 @@ module Kojo #:nodoc:
           end
         
           def build_model_instance(klass, attributes = nil)
+            # If we pass in a string here for klass instead of a constant
+            # we want to convert that. 
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
             instance = klass.new
             if attributes.nil?

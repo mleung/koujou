@@ -22,7 +22,7 @@ class TestDataGenerator < Test::Unit::TestCase
       assert_kind_of Float, float
     end
     
-    should  'genarate a valid string' do
+    should  'generate a valid string' do
       @validation.expects(:name).returns('name')
       string = Kojo::DataGenerator.new(false).generate_data_for_column_type(@validation)
       assert_kind_of String, string

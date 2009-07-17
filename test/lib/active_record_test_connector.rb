@@ -34,17 +34,18 @@ class ActiveRecordTestConnector
     def load_schema
       ActiveRecord::Schema.define do
         create_table "users", :force => true do |t|
-          t.column "name",  :text
-          t.column "email", :text
-          t.column "age", :integer
+          t.string "name", "email"
+          t.integer "age"
+          t.float "salary"
+          t.datetime "hired_on"
         end
         create_table "posts", :force => true do |t|
-          t.column "name",  :text
-          t.column "user_id", :integer
+          t.string "name"
+          t.integer "user_id"
         end
         create_table "comments", :force => true do |t|
-          t.column "body",  :text
-          t.column "post_id", :integer
+          t.text "body"
+          t.integer "post_id"
         end
       end
     end

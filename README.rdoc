@@ -1,26 +1,18 @@
 = koujou
 
-* http://github.com/#{github_username}/#{project_name}
+* http://github.com/mleung/koujou
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Koujou is a fixture replacement that requires no effort to use. You don't have to define a single thing
+in your test_helper or whatever. Just call the koujou method on your active record model, and you're 
+off. 
 
-== FEATURES/PROBLEMS:
-
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
-
-== REQUIREMENTS:
-
-* FIX (list of requirements)
+check out: http://www.michaelleung.us/koujou for all the juicy details.
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+gem install mleung-koujou --source http://gems.github.com
 
 == LICENSE:
 

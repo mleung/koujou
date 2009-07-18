@@ -70,6 +70,8 @@ module Koujou #:nodoc:
           
           def set_length_validated_attributes!(instance, attributes)
             instance.class.length_validations.each do |v|
+              # We also handle length in set_unique_attributes! and set_required_attributes! so
+              # no need to worry about it here.
               next if has_unique_validation?(instance, v) || has_required_validation?(instance, v) ||
                       overridden_attribute?(attributes, v.name)
               

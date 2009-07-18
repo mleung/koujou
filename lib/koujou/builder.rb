@@ -55,7 +55,6 @@ module Koujou #:nodoc:
               # we can skip it, because that gets set below.
               standard_required_attributes(instance, v) do
                 next if overriden_attribute?(attributes, v.name)
-
                 instance.write_attribute(v.name, DataGenerator.new(false, v).generate_data_for_column_type)
               end
             end
@@ -64,7 +63,6 @@ module Koujou #:nodoc:
           def set_unique_attributes!(instance, attributes)
             instance.class.unique_validations.each do |v| 
               next if overriden_attribute?(attributes, v.name)
-
               instance.write_attribute(v.name, DataGenerator.new(true, v).generate_data_for_column_type)
             end
           end

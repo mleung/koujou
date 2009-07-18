@@ -45,7 +45,6 @@ module Koujou #:nodoc:
             create_associations(instance)
 
             instance
-            
           end
         
           def set_required_attributes!(instance, attributes)
@@ -64,6 +63,7 @@ module Koujou #:nodoc:
           def set_unique_attributes!(instance, attributes)
             instance.class.unique_validations.each do |v| 
               next if overriden_attribute?(attributes, v.name)
+              
               instance.send("#{v.name}=", DataGenerator.new(true, v).generate_data_for_column_type) 
             end
           end
@@ -83,12 +83,14 @@ module Koujou #:nodoc:
             instance.class.reflect_on_all_associations.each do |a|
               # We don't want to create any models for has_many :through =>
               next if a.through_reflection
+              
               if a.macro == :has_many
                 instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
               end
               if a.macro == :has_one
                 instance.send("#{a.name.to_s}=", build_model_instance(a.name.to_s.singularize.classify))
               end
+              
             end
           end
           

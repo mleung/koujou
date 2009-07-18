@@ -42,6 +42,7 @@ module Koujou #:nodoc:
             set_required_attributes!(instance, attributes)
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)
+            set_length_validated_attributes!(instance, attributes)
             create_associations(instance)
 
             instance
@@ -55,9 +56,7 @@ module Koujou #:nodoc:
               # we can skip it, because that gets set below.
               standard_required_attributes(instance, v) do
                 next if overridden_attribute?(attributes, v.name)
-
-                data_generator = DataGenerator.new(false, v)
-                instance.write_attribute(v.name, data_generator.generate_data_for_column_type)
+                generate_and_set_data(instance, v, false)
               end
             end
           end
@@ -65,9 +64,16 @@ module Koujou #:nodoc:
           def set_unique_attributes!(instance, attributes)
             instance.class.unique_validations.each do |v| 
               next if overridden_attribute?(attributes, v.name)
-
-              data_generator = DataGenerator.new(true, v)
-              instance.write_attribute(v.name, data_generator.generate_data_for_column_type)
+              generate_and_set_data(instance, v, true)
+            end
+          end
+          
+          def set_length_validated_attributes!(instance, attributes)
+            instance.class.length_validations.each do |v|
+              next if has_unique_validation?(instance, v) || has_required_validation?(instance, v) ||
+                      overridden_attribute?(attributes, v.name)
+              
+              generate_and_set_data(instance, v, false)
             end
           end
 
@@ -78,7 +84,7 @@ module Koujou #:nodoc:
               instance.send("#{v.name}_confirmation=", instance.send("#{v.name}"))
             end
           end
-
+          
           def create_associations(instance)
             # This looks sort of hairy, but it's actually quite simple. We just loop through all the has_many
             # or has_one associations on the current instance using introspection, and build up and assign
@@ -98,21 +104,39 @@ module Koujou #:nodoc:
             end
           end
           
+          def generate_and_set_data(instance, validation, sequenced)
+            data_generator = DataGenerator.new(sequenced, validation)
+            data_generator.required_length = get_required_length(instance, validation)
+            instance.write_attribute(validation.name, data_generator.generate_data_for_column_type)
+          end
+          
           def standard_required_attributes(instance, validation)
             yield unless has_unique_validation?(instance, validation) 
           end
-
+          
           def overridden_attribute?(attributes, key)
             attributes && attributes.has_key?(key.to_sym)
           end
 
           # This creates has_unique_validation?, has_length_validation? etc. 
           # We could probably make one method that takes a type, but I'd rather
-          # use define_method and get separate methods for each. Cool?
-          %w(unique length).each do |v|
+          # get separate methods for each. Cool?
+          %w(unique length required).each do |v|
             define_method("has_#{v}_validation?") do |instance, validation|
               !instance.class.send("#{v}_validations").select{|u| u.name == validation.name }.empty?
             end
+          end
+          
+          def get_required_length(instance, validation)
+            return unless has_length_validation?(instance, validation)
+            
+            options = instance.class.length_validations.first.options
+            # If the validation is validates_length_of :name, :within => 1..20
+            # Let's just return the minimum value of the range.
+            return options.values.first.entries.first if options.has_key?(:within) || options.has_key?(:in)
+            # If any of the other options are set, just return the first value. That should satisfy the validation.
+            return options.values.first if options.has_key?(:minimum)  ||
+                                        options.has_key?(:maximum) || options.has_key?(:is)
           end
                                       
       end

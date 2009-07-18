@@ -105,6 +105,10 @@ module Koujou # :nodoc:
         def confirmation_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_confirmation_of }
         end
+        
+        def length_validations
+          reflect_on_all_validations.select{|v| v.macro == :validates_length_of }
+        end
 
         private
         

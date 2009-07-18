@@ -54,16 +54,20 @@ module Koujou #:nodoc:
               # method with a sequence. Also, if it's a confirmation field (e.g. password_confirmation)
               # we can skip it, because that gets set below.
               standard_required_attributes(instance, v) do
-                next if overriden_attribute?(attributes, v.name)
-                instance.write_attribute(v.name, DataGenerator.new(false, v).generate_data_for_column_type)
+                next if overridden_attribute?(attributes, v.name)
+
+                data_generator = DataGenerator.new(false, v)
+                instance.write_attribute(v.name, data_generator.generate_data_for_column_type)
               end
             end
           end
 
           def set_unique_attributes!(instance, attributes)
             instance.class.unique_validations.each do |v| 
-              next if overriden_attribute?(attributes, v.name)
-              instance.write_attribute(v.name, DataGenerator.new(true, v).generate_data_for_column_type)
+              next if overridden_attribute?(attributes, v.name)
+
+              data_generator = DataGenerator.new(true, v)
+              instance.write_attribute(v.name, data_generator.generate_data_for_column_type)
             end
           end
 
@@ -97,13 +101,18 @@ module Koujou #:nodoc:
           def standard_required_attributes(instance, validation)
             yield unless has_unique_validation?(instance, validation) 
           end
-          
-          def has_unique_validation?(instance, validation)
-            !instance.class.unique_validations.select{|u| u.name == validation.name }.empty?
-          end
-          
-          def overriden_attribute?(attributes, key)
+
+          def overridden_attribute?(attributes, key)
             attributes && attributes.has_key?(key.to_sym)
+          end
+
+          # This creates has_unique_validation?, has_length_validation? etc. 
+          # We could probably make one method that takes a type, but I'd rather
+          # use define_method and get separate methods for each. Cool?
+          %w(unique length).each do |v|
+            define_method("has_#{v}_validation?") do |instance, validation|
+              !instance.class.send("#{v}_validations").select{|u| u.name == validation.name }.empty?
+            end
           end
                                       
       end

@@ -34,35 +34,41 @@ module Koujou #:nodoc:
             # we want to convert that. 
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
             instance = klass.new
-            if attributes.nil?
-              set_required_attributes!(instance)
-              set_unique_attributes!(instance)
-              set_confirmation_attributes!(instance)
-            else
-              instance.attributes = attributes
-            end
+            # Set the models attributes if the user passed them in.
+            # this will allow attributes to be set regardless if
+            # they're required or not.
+            instance.attributes = attributes unless attributes.nil?
+
+            set_required_attributes!(instance, attributes)
+            set_unique_attributes!(instance, attributes)
+            set_confirmation_attributes!(instance, attributes)
             create_associations(instance)
+
             instance
+            
           end
         
-          def set_required_attributes!(instance)
+          def set_required_attributes!(instance, attributes)
             instance.class.required_validations.each do |v|
               # We want to skip over setting any required fields if the field
               # should also be unique. We handle that in the set_unique_attributes!
               # method with a sequence. Also, if it's a confirmation field (e.g. password_confirmation)
               # we can skip it, because that gets set below.
               standard_required_attributes(instance, v) do
+                next if overriden_attribute?(attributes, v.name)
                 instance.send("#{v.name}=", DataGenerator.new(false, v).generate_data_for_column_type)
               end
             end
           end
 
-          def set_unique_attributes!(instance)
-            instance.class.unique_validations.each {|v| instance.send("#{v.name}=",
-                                                  DataGenerator.new(true, v).generate_data_for_column_type) }
+          def set_unique_attributes!(instance, attributes)
+            instance.class.unique_validations.each do |v| 
+              next if overriden_attribute?(attributes, v.name)
+              instance.send("#{v.name}=", DataGenerator.new(true, v).generate_data_for_column_type) 
+            end
           end
 
-          def set_confirmation_attributes!(instance)
+          def set_confirmation_attributes!(instance, attributes)
             instance.class.confirmation_validations.each do |v|
               # This goes in and sets the models confirmation to whatever the corresponding
               # fields value is. (e.g. password_confirmation= password)
@@ -92,6 +98,10 @@ module Koujou #:nodoc:
           
           def has_unique_validation?(instance, validation)
             !instance.class.unique_validations.select{|u| u.name == validation.name }.empty?
+          end
+          
+          def overriden_attribute?(attributes, key)
+            attributes && attributes.has_key?(key.to_sym)
           end
                                       
       end

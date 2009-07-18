@@ -47,6 +47,13 @@ class TestBuilder < Test::Unit::TestCase
       assert_equal namae, p.name
     end
     
+    should 'allow me to override select attributes, yet still generate data for the rest' do
+      bod = "This is a super sweet post. Mmmmkay?"
+      p = Post.koujou_create(:body => bod)
+      assert_not_nil p.name
+      assert_equal bod, p.body
+    end
+    
   end
   
   context 'on sending the koujou_create message' do

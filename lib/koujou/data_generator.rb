@@ -8,7 +8,15 @@ module Koujou #:nodoc:
     end
 
     def generate_data_for_column_type
-      db_type = @validation.active_record.columns_hash["#{@validation.name}"].type
+      # Sometimes models have a validates_presence_of set, but there's no corresponding 
+      # db column. The only example I can think of for this is a user model where the acutal
+      # column is hash_password but we're requiring password. So we'll just guess it's
+      # a string. This could bite me in the ass later, but we'll see.
+      if @validation.active_record.columns_hash.has_key?("#{@validation.name}")
+        db_type = @validation.active_record.columns_hash["#{@validation.name}"].type
+      else
+        db_type = 'string'
+      end
       # Since the method names are all based on the db types, we'll just go ahead and
       # dynamically call the appropriate one. 
       send("generate_#{db_type}")

@@ -49,31 +49,31 @@ class TestBuilder < Test::Unit::TestCase
     
   end
   
-  context 'on sending the create_koujou message' do
+  context 'on sending the koujou_create message' do
 
     should 'persist the record to the db' do
-      u = User.create_koujou
+      u = User.koujou_create
       assert !u.new_record?
     end
     
     should 'allow me to override the model attributes' do
       comment = 'your post is epic fail'
-      c = Comment.create_koujou(:body => comment)
+      c = Comment.koujou_create(:body => comment)
       assert_equal comment, c.body
     end
     
   end
   
-  context 'on sending the new_koujou message' do
+  context 'on sending the koujou_build message' do
     
     should 'return a new record' do
-      u = User.new_koujou
+      u = User.koujou_build
       assert u.new_record?
     end
     
     should 'all me to override the model attributes' do
       clever = 'Whatver\'s clever'
-      p = Post.new_koujou(:name => clever)
+      p = Post.koujou_build(:name => clever)
       assert_equal clever, p.name
     end
     

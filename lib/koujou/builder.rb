@@ -14,11 +14,11 @@ module Koujou #:nodoc:
           generate_instance(create, attributes)
         end
       
-        def new_koujou(attributes = nil)
+        def koujou_build(attributes = nil)
           koujou(false, attributes)
         end
       
-        def create_koujou(attributes = nil)
+        def koujou_create(attributes = nil)
           koujou(true, attributes)
         end
 

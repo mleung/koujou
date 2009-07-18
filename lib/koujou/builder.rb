@@ -87,6 +87,7 @@ module Koujou #:nodoc:
               if a.macro == :has_many
                 instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
               end
+              
               if a.macro == :has_one
                 instance.send("#{a.name.to_s}=", build_model_instance(a.name.to_s.singularize.classify))
               end

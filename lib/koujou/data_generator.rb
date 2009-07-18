@@ -60,7 +60,7 @@ module Koujou #:nodoc:
       end
 
       def format_if_sequenced(val)
-        @sequenced ? "#{val} #{Sequence.instance.next}" : val
+        @sequenced ? "#{Sequence.instance.next}#{val}" : val
       end
       
   end

@@ -13,7 +13,7 @@ class TestBuilder < Test::Unit::TestCase
     
     should 'return an instance of User, with ActiveRecord::Base as an ancestor' do
       u = User.koujou
-      assert_equal "User", u.class.to_s
+      assert_equal User, u.class
       assert u.class.ancestors.include?(ActiveRecord::Base)
     end
   end

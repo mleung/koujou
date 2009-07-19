@@ -41,7 +41,7 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil u.password_confirmation
     end
     
-    should 'all me to override the model attributes' do
+    should 'allow me to override the model attributes' do
       namae = 'One Factory to Rule them all'
       p = Post.koujou(true, :name => namae)
       assert_equal namae, p.name

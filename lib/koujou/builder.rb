@@ -35,7 +35,7 @@ module Koujou #:nodoc:
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
             instance = klass.new
             # Set the models attributes if the user passed them in.
-            # this will allow attributes to be set regardless if
+            # This will allow attributes to be set regardless if
             # they're required or not.
             instance.attributes = attributes unless attributes.nil?
 
@@ -72,6 +72,7 @@ module Koujou #:nodoc:
             instance.class.length_validations.each do |v|
               # We also handle length in set_unique_attributes! and set_required_attributes! so
               # no need to worry about it here.
+              # FIXME: make a method that takes a block for these conditions.
               next if has_unique_validation?(instance, v) || has_required_validation?(instance, v) ||
                       overridden_attribute?(attributes, v.name)
               

@@ -110,6 +110,10 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil @u.profile
     end
     
+    should 'create the association using the class_name option in has_many' do
+      assert_not_nil @u.profile.sent_messages.first
+    end
+    
   end
   
 end

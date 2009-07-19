@@ -53,6 +53,18 @@ class ActiveRecordTestConnector
           t.integer "user_id"
           t.boolean "likes_cheese"
         end
+        create_table "photos", :force => true do |t|
+          t.integer "profile_id"
+        end
+        create_table "messages", :force => true do |t|
+          t.string   "subject"
+          t.text     "body"
+          t.datetime "created_at"
+          t.datetime "updated_at"
+          t.integer  "sender_id"
+          t.integer  "receiver_id"
+          t.boolean  "read"
+        end
       end
     end
      

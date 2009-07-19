@@ -97,13 +97,21 @@ module Koujou #:nodoc:
               next if a.through_reflection
               
               if a.macro == :has_many
-                instance.send(a.name.to_s) << build_model_instance(a.name.to_s.singularize.classify) 
+                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a)) 
               end
               
               if a.macro == :has_one
-                instance.send("#{a.name.to_s}=", build_model_instance(a.name.to_s.singularize.classify))
+                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a)))
               end
               
+            end
+          end
+          
+          def get_assocation_class_name(assocation)
+            if assocation.options.has_key?(:class_name)
+              klass = assocation.options[:class_name]
+            else
+              klass = assocation.name.to_s.singularize.classify
             end
           end
           

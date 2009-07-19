@@ -28,7 +28,7 @@ module Koujou #:nodoc:
       return format_if_sequenced(Faker::Internet.email)   if @validation.name.to_s.match(/email/)
       return format_if_sequenced(Faker::Name.first_name)  if @validation.name.to_s == 'first_name'
       return format_if_sequenced(Faker::Name.last_name)   if @validation.name.to_s == 'last_name'
-      return format_if_sequenced(Faker::Name.user_name)   if @validation.name.to_s.match(/login|user_name/)
+      return format_if_sequenced(Faker::Internet.user_name)   if @validation.name.to_s.match(/login|user_name/)
       return format_if_sequenced(Faker::Address.city)     if @validation.name.to_s.match(/city/)
       return format_if_sequenced(Faker::Address.us_state) if @validation.name.to_s.match(/state|province/)
       return format_if_sequenced(Faker::Address.zip_code) if @validation.name.to_s.match(/zip|postal/)

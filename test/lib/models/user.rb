@@ -3,12 +3,16 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_confirmation_of :password
   validates_acceptance_of :terms_of_service
-  validates_length_of :password, :within => 5..40
+  validates_length_of :password, :within => 5..40, :if => :password_required?
   
   has_many :posts
   has_one :profile
   
   attr_accessible :password, :password_confirmation
+  
+  def password_required?
+    true
+  end
   
   
 end

@@ -25,7 +25,7 @@ module Koujou #:nodoc:
         protected
           def generate_instance(create, attributes)
             instance = build_model_instance(self, attributes)
-            instance.save if create 
+            instance.save! if create 
             instance
           end
         

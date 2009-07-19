@@ -47,5 +47,21 @@ class TestDataGenerator < Test::Unit::TestCase
     end
     
   end
+  
+  context "on generate with a required length" do
+    setup do
+      @validation = mock("ActiveRecord::Reflection::MacroReflection")
+      @validation.expects(:active_record).twice.returns(Post)
+    end
+    
+    should 'generate the correct size string with a length passed in' do
+      @validation.expects(:name).twice.returns('body')
+      data_generator = Koujou::DataGenerator.new(false, @validation)
+      data_generator.required_length = 20
+      body = data_generator.generate_data_for_column_type
+      assert_equal 20, body.size
+    end
+    
+  end
 
 end

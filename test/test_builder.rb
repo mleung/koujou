@@ -48,12 +48,12 @@ class TestBuilder < Test::Unit::TestCase
     end
     
     should 'allow me to override select attributes, yet still generate data for the rest' do
-      bod = "This is a super sweet post. Mmmmkay?"
+      bod = "T" * 20
       p = Post.koujou_create(:body => bod)
       assert_not_nil p.name
       assert_equal bod, p.body
     end
-    
+        
   end
   
   context 'on sending the koujou_create message' do
@@ -67,6 +67,12 @@ class TestBuilder < Test::Unit::TestCase
       comment = 'your post is epic fail'
       c = Comment.koujou_create(:body => comment)
       assert_equal comment, c.body
+    end
+    
+    should 'not be sequenced unless I say so' do
+      u = User.koujou
+      # The first digit should not be an integer.
+      assert_equal 0, u.first_name[0,1].to_i
     end
     
   end

@@ -27,9 +27,9 @@ module Koujou #:nodoc:
             instance = build_model_instance(self, attributes)
             instance.save! if create 
             instance
-          end
+            end
         
-          def build_model_instance(klass, attributes = nil)
+          def build_model_instance(klass, attributes = nil, recursed = false)
             # If we pass in a string here for klass instead of a constant
             # we want to convert that. 
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
@@ -43,7 +43,7 @@ module Koujou #:nodoc:
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)
             set_length_validated_attributes!(instance, attributes)
-            create_associations(instance)
+            create_associations(instance, recursed)
 
             instance
           end
@@ -88,7 +88,7 @@ module Koujou #:nodoc:
             end
           end
           
-          def create_associations(instance)
+          def create_associations(instance, recursed = false)
             # This looks sort of hairy, but it's actually quite simple. We just loop through all the has_many
             # or has_one associations on the current instance using introspection, and build up and assign
             # some models to each.
@@ -97,13 +97,18 @@ module Koujou #:nodoc:
               next if a.through_reflection
               
               if a.macro == :has_many
-                p = build_model_instance(get_assocation_class_name(a)) 
-                instance.send(a.name.to_s) << p
-                # raise p.body if ! p.valid?
+                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a), nil, true) 
               end
               
-              if a.macro == :has_one
-                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a)))
+              # So when we call build_model_instance from here, we want to set recursed to true. This will 
+              # allow any models that have a has_one to have their parent created. However, the first time 
+              # through here, recursed will be false, and we won't create parent models because they 
+              # will already be there from has_many. As an example: user has_many :posts. We start
+              # building these models for the already existing user model. We don't want to create
+              # another user model. However, if a model has a belongs_to, but the parent model
+              # doesn't have a has_many, we would like to create the parent model. Does that make sense?
+              if a.macro == :has_one || (a.macro == :belongs_to && !recursed)
+                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a), nil, true))
               end
               
             end
@@ -161,14 +166,11 @@ module Koujou #:nodoc:
             options = instance.class.length_validations.select{|v| v.name == validation.name }.first.options
             
             retval = nil
-            # If the validation is validates_length_of :name, :within => 1..20
+            # If the validation is validates_length_of :name, :within => 1..20 (or in, which is an alias),
             # let's just return the minimum value of the range. 
-            retval = options[:within].entries.first if options.has_key?(:within) 
-            # in is an alias to within.
-            retval = options[:in].entries.first     if options.has_key?(:in) 
-            retval = options[:is]                   if options.has_key?(:is)
-            retval = options[:minimum]              if options.has_key?(:minimum)
-            retval = options[:maximum]              if options.has_key?(:maximum)
+            %w(within in).each {|o| retval = options[o.to_sym].entries.first if options.has_key?(o.to_sym) }
+            # These other validations should just return the value set.
+            %w(is minimum maximum).each {|o| retval = options[o.to_sym] if options.has_key?(o.to_sym) }
             retval
           end
                                       

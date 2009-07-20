@@ -65,6 +65,10 @@ class ActiveRecordTestConnector
           t.integer  "receiver_id"
           t.boolean  "read"
         end
+        create_table "cars", :force => true do |t|
+          t.integer "user_id"
+          t.string "make", "model"
+        end
       end
     end
      

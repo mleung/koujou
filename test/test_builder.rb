@@ -48,6 +48,7 @@ class TestBuilder < Test::Unit::TestCase
     end
     
     should 'allow me to override select attributes, yet still generate data for the rest' do
+      # We have a validates_length_of :bod, :is => 20 set.
       bod = "T" * 20
       p = Post.koujou_create(:body => bod)
       assert_not_nil p.name
@@ -112,6 +113,11 @@ class TestBuilder < Test::Unit::TestCase
     
     should 'create the association using the class_name option in has_many' do
       assert_not_nil @u.profile.sent_messages.first
+    end
+    
+    should 'create the parent for model that has belongs to, where the parent does not have a has_many for it' do
+      c = Car.koujou
+      assert_not_nil c.user
     end
     
   end

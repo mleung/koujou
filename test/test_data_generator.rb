@@ -32,7 +32,7 @@ class TestDataGenerator < Test::Unit::TestCase
     should 'generate a valid email' do
       @validation.expects(:name).times(1..10).returns('email')
       email = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
-      assert_match /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, email
+      assert_match(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, email)
     end
     
     should 'generate a valid datetime' do

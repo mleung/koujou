@@ -120,11 +120,6 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil c.user
     end
     
-    should 'work with validates_presence_of :model_id' do
-      e = Event.koujou
-      assert_not_nil e.registrants
-    end
-    
   end
   
 end

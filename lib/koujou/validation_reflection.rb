@@ -40,6 +40,7 @@ module Koujou # :nodoc:
          validates_format_of
          validates_inclusion_of
          validates_length_of
+         validates_size_of
          validates_numericality_of
          validates_presence_of
          validates_uniqueness_of
@@ -107,9 +108,9 @@ module Koujou # :nodoc:
         end
         
         def length_validations
-          reflect_on_all_validations.select{|v| v.macro == :validates_length_of }
+          reflect_on_all_validations.select{|v| v.macro == :validates_length_of || v.macro == :validates_size_of }
         end
-
+        
         private
         
         def remember_validation_metadata(validation_type, *attr_names)

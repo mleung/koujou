@@ -147,19 +147,7 @@ module Koujou #:nodoc:
               !instance.class.send("#{v}_validations").select{|u| u.name == validation.name }.empty?
             end
           end
-          
-          def get_required_length(instance, validation)
-            return unless has_length_validation?(instance, validation)
-
-            options = instance.class.length_validations.first.options
-            # If the validation is validates_length_of :name, :within => 1..20
-            # Let's just return the minimum value of the range.
-            return options.values.first.entries.first if options.has_key?(:within) || options.has_key?(:in)
-            # If any of the other options are set, just return the first value. That should satisfy the validation.
-            return options.values.first if options.has_key?(:minimum)  ||
-                                        options.has_key?(:maximum) || options.has_key?(:is)
-          end
-          
+                    
           def get_required_length(instance, validation)
             return unless has_length_validation?(instance, validation)
             

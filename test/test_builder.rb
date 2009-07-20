@@ -85,8 +85,8 @@ class TestBuilder < Test::Unit::TestCase
       assert u.new_record?
     end
     
-    should 'all me to override the model attributes' do
-      clever = 'Whatver\'s clever'
+    should 'allow me to override the model attributes' do
+      clever = 'Whatever\'s clever'
       p = Post.koujou_build(:name => clever)
       assert_equal clever, p.name
     end

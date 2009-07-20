@@ -25,7 +25,7 @@ module Koujou #:nodoc:
         protected
           def generate_instance(create, attributes)
             # There were a metric ton of AR warnings about instance vars
-            # not being initialized. This hides those.
+            # not being initialized when running our specs. This hides those.
             silence_warnings do
               instance = build_model_instance(self, attributes)
               instance.save! if create 

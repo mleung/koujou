@@ -24,9 +24,11 @@ module Koujou #:nodoc:
 
         protected
           def generate_instance(create, attributes)
-            instance = build_model_instance(self, attributes)
-            instance.save! if create 
-            instance
+            silence_warnings do
+              instance = build_model_instance(self, attributes)
+              instance.save! if create 
+              instance
+            end
           end
         
           def build_model_instance(klass, attributes = nil, recursed = false)

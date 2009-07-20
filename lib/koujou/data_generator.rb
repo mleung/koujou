@@ -34,7 +34,7 @@ module Koujou #:nodoc:
       return format_if_sequenced(Faker::Address.zip_code) if @validation.name.to_s.match(/zip|postal/)
 
       # If we don't match any standard stuff, just return a regular bs lorem string comprised of 5 words.
-      standard_text = format_if_sequenced(Faker::Lorem.words(5).to_s)
+      standard_text = format_if_sequenced(Faker::Lorem.words(10).to_s)
       # So if there's a length validation set, we need to return just that amount of data.
       standard_text = standard_text[0..@required_length - 1].to_s  if @required_length
       standard_text

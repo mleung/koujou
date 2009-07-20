@@ -7,8 +7,6 @@ class User < ActiveRecord::Base
   
   has_many :posts
   has_one :profile
-
-  validates_associated :posts
   
   attr_accessible :password, :password_confirmation
   

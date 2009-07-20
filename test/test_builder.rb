@@ -65,8 +65,8 @@ class TestBuilder < Test::Unit::TestCase
     
     should 'allow me to override the model attributes' do
       comment = 'your post is epic fail'
-      c = Comment.koujou_create(:body => comment)
-      assert_equal comment, c.body
+      c = Comment.koujou_create(:bod => comment)
+      assert_equal comment, c.bod
     end
     
     should 'not be sequenced unless I say so' do

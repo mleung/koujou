@@ -97,7 +97,9 @@ module Koujou #:nodoc:
               next if a.through_reflection
               
               if a.macro == :has_many
-                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a)) 
+                p = build_model_instance(get_assocation_class_name(a)) 
+                instance.send(a.name.to_s) << p
+                # raise p.body if ! p.valid?
               end
               
               if a.macro == :has_one
@@ -108,6 +110,9 @@ module Koujou #:nodoc:
           end
           
           def get_assocation_class_name(assocation)
+            # This condition is used if the class_name option
+            # is passed to has_many or has_one. We'll definitely
+            # want to use that key instead of the name of the association.
             if assocation.options.has_key?(:class_name)
               klass = assocation.options[:class_name]
             else
@@ -140,7 +145,7 @@ module Koujou #:nodoc:
           
           def get_required_length(instance, validation)
             return unless has_length_validation?(instance, validation)
-            
+
             options = instance.class.length_validations.first.options
             # If the validation is validates_length_of :name, :within => 1..20
             # Let's just return the minimum value of the range.
@@ -148,6 +153,23 @@ module Koujou #:nodoc:
             # If any of the other options are set, just return the first value. That should satisfy the validation.
             return options.values.first if options.has_key?(:minimum)  ||
                                         options.has_key?(:maximum) || options.has_key?(:is)
+          end
+          
+          def get_required_length(instance, validation)
+            return unless has_length_validation?(instance, validation)
+            
+            options = instance.class.length_validations.select{|v| v.name == validation.name }.first.options
+            
+            retval = nil
+            # If the validation is validates_length_of :name, :within => 1..20
+            # let's just return the minimum value of the range. 
+            retval = options[:within].entries.first if options.has_key?(:within) 
+            # in is an alias to within.
+            retval = options[:in].entries.first     if options.has_key?(:in) 
+            retval = options[:is]                   if options.has_key?(:is)
+            retval = options[:minimum]              if options.has_key?(:minimum)
+            retval = options[:maximum]              if options.has_key?(:maximum)
+            retval
           end
                                       
       end

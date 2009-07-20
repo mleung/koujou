@@ -69,6 +69,13 @@ class ActiveRecordTestConnector
           t.integer "user_id"
           t.string "make", "model"
         end
+        create_table "events", :force => true do |t|
+          t.string "name"
+        end
+        create_table "registrants", :force => true do |t|
+          t.integer "event_id"
+          t.string "name"
+        end
       end
     end
      

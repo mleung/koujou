@@ -100,10 +100,6 @@ module Koujou #:nodoc:
               # We don't want to create any models for has_many :through =>
               next if a.through_reflection
               
-              if a.macro == :has_many
-                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a), nil, true) 
-              end
-              
               # So when we call build_model_instance from here, we want to set recursed to true. This will 
               # allow any models that have a has_one to have their parent created. However, the first time 
               # through here, recursed will be false, and we won't create parent models because they 
@@ -111,7 +107,9 @@ module Koujou #:nodoc:
               # building these models for the already existing user model. We don't want to create
               # another user model. However, if a model has a belongs_to, but the parent model
               # doesn't have a has_many, we would like to create the parent model. Does that make sense?
-              if a.macro == :has_one || (a.macro == :belongs_to && !recursed)
+              if a.macro == :has_many
+                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a), nil, true) 
+              elsif a.macro == :has_one || (a.macro == :belongs_to && !recursed)
                 instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a), nil, true))
               end
               

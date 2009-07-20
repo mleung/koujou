@@ -27,7 +27,7 @@ module Koujou #:nodoc:
             instance = build_model_instance(self, attributes)
             instance.save! if create 
             instance
-            end
+          end
         
           def build_model_instance(klass, attributes = nil, recursed = false)
             # If we pass in a string here for klass instead of a constant

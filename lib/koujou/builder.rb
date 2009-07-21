@@ -33,7 +33,7 @@ module Koujou #:nodoc:
             end
           end
         
-          def build_model_instance(klass, attributes = nil, recursed = false)
+          def build_model_instance(klass, attributes = nil)
             # If we pass in a string here for klass instead of a constant
             # we want to convert that. 
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
@@ -47,7 +47,7 @@ module Koujou #:nodoc:
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)
             set_length_validated_attributes!(instance, attributes)
-            create_associations(instance, recursed)
+            create_associations(instance)
 
             instance
           end
@@ -59,7 +59,11 @@ module Koujou #:nodoc:
               # method with a sequence. Also, if it's a confirmation field (e.g. password_confirmation)
               # we can skip it, because that gets set below.
               standard_required_attributes(instance, v) do
-                next if overridden_attribute?(attributes, v.name)
+                # We don't want to set anything if the user passed in data for this field
+                # or if this is a validates_presence_of :some_id. The ids will be set
+                # when we create the association.
+                next if overridden_attribute?(attributes, v.name) || has_required_id_validation?(instance, v.name)
+                
                 generate_and_set_data(instance, v, false)
               end
             end
@@ -92,25 +96,19 @@ module Koujou #:nodoc:
             end
           end
           
-          def create_associations(instance, recursed = false)
-            # This looks sort of hairy, but it's actually quite simple. We just loop through all the has_many
-            # or has_one associations on the current instance using introspection, and build up and assign
-            # some models to each.
+          def create_associations(instance)
+            # We loop through all the has_one or belongs_to associations on the current instance 
+            # using introspection, and build up and assign some models to each, if the user has 
+            # required the id (e.g. requires_presence_of :user_id). So we're only going to build 
+            # the minimum requirements for each model. 
             instance.class.reflect_on_all_associations.each do |a|
-              # We don't want to create any models for has_many :through =>
-              next if a.through_reflection
-              
-              # So when we call build_model_instance from here, we want to set recursed to true. This will 
-              # allow any models that have a has_one to have their parent created. However, the first time 
-              # through here, recursed will be false, and we won't create parent models because they 
-              # will already be there from has_many. As an example: user has_many :posts. We start
-              # building these models for the already existing user model. We don't want to create
-              # another user model. However, if a model has a belongs_to, but the parent model
-              # doesn't have a has_many, we would like to create the parent model. Does that make sense?
-              if a.macro == :has_many
-                instance.send(a.name.to_s) << build_model_instance(get_assocation_class_name(a), nil, true) 
-              elsif a.macro == :has_one || (a.macro == :belongs_to && !recursed)
-                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a), nil, true))
+              # We only want to create the association if the user has required the id field. 
+              # This will build the minimum valid requirements. 
+              # raise "yeah" if a.name.to_s == "user_id"
+              next unless has_required_id_validation?(instance, a.name)
+
+              if a.macro == :has_one || a.macro == :belongs_to
+                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a)))
               end
               
             end
@@ -167,6 +165,10 @@ module Koujou #:nodoc:
             end
             
             nil
+          end
+          
+          def has_required_id_validation?(instance, name)
+            !instance.class.required_validations.select{|v| v.name.to_s == "#{name}_id" }.empty?
           end
                                       
       end

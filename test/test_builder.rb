@@ -93,34 +93,20 @@ class TestBuilder < Test::Unit::TestCase
     
   end
   
-  context 'on creating associations' do
+  context 'associations' do
     
-    setup do
-      @u = User.koujou
+    should 'not automatically create any assoications unless there\'s a validation for the id' do
+      u = User.koujou
+      assert_equal 0, u.posts.size
     end
     
-    should 'have a post class associated with a user' do
-      assert_equal 1, @u.posts.size
-    end
-    
-    should 'generate a comment class associated with posts, which is associated with users' do
-      assert_equal 1, @u.posts.first.comments.size
-    end
-    
-    should 'have a profile through the has_one association' do
-      assert_not_nil @u.profile
-    end
-    
-    should 'create the association using the class_name option in has_many' do
-      assert_not_nil @u.profile.sent_messages.first
-    end
-    
-    should 'create the parent for model that has belongs to, where the parent does not have a has_many for it' do
-      c = Car.koujou
-      assert_not_nil c.user
+    should 'automatically create a user for a profile when the post has a required user_id validation' do
+      p = Profile.koujou
+      assert_not_nil p.user
     end
     
   end
+  
   
 end
 

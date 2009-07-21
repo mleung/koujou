@@ -100,7 +100,7 @@ class TestBuilder < Test::Unit::TestCase
       assert_equal 0, u.posts.size
     end
     
-    should 'automatically create a user for a profile when the post has a required user_id validation' do
+    should 'automatically create a user for a profile when the profile has a required user_id validation' do
       p = Profile.koujou
       assert_not_nil p.user
     end

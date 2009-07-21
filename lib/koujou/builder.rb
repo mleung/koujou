@@ -33,7 +33,7 @@ module Koujou #:nodoc:
             end
           end
         
-          def build_model_instance(klass, attributes = nil)
+          def build_model_instance(klass, attributes = nil, recursed_from_model = nil)
             # If we pass in a string here for klass instead of a constant
             # we want to convert that. 
             klass = Kernel.const_get(klass) unless klass.respond_to?(:new)
@@ -47,7 +47,7 @@ module Koujou #:nodoc:
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)
             set_length_validated_attributes!(instance, attributes)
-            create_associations(instance)
+            create_associations(instance, recursed_from_model)
 
             instance
           end
@@ -96,7 +96,7 @@ module Koujou #:nodoc:
             end
           end
           
-          def create_associations(instance)
+          def create_associations(instance, recursed_from_model = nil)
             # We loop through all the has_one or belongs_to associations on the current instance 
             # using introspection, and build up and assign some models to each, if the user has 
             # required the id (e.g. requires_presence_of :user_id). So we're only going to build 
@@ -108,7 +108,12 @@ module Koujou #:nodoc:
               next unless has_required_id_validation?(instance, a.name)
 
               if a.macro == :has_one || a.macro == :belongs_to
-                instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a)))
+                # If there's a two way association here (user has_one profile, profile belongs_to user)
+                # we only want to create one of those, or it'll recurse forever. That's what the 
+                # recursed_from_model does. 
+                unless recursed_from_model.to_s == instance.class.to_s.downcase
+                  instance.send("#{a.name.to_s}=", build_model_instance(get_assocation_class_name(a), nil, a.name))
+                end
               end
               
             end
@@ -168,7 +173,7 @@ module Koujou #:nodoc:
           end
           
           def has_required_id_validation?(instance, name)
-            !instance.class.required_validations.select{|v| v.name.to_s == "#{name}_id" }.empty?
+            !instance.class.required_validations.select{|v| v.name.to_s  == "#{name}_id" }.empty?
           end
                                       
       end

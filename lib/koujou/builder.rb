@@ -104,7 +104,6 @@ module Koujou #:nodoc:
             instance.class.reflect_on_all_associations.each do |a|
               # We only want to create the association if the user has required the id field. 
               # This will build the minimum valid requirements. 
-              # raise "yeah" if a.name.to_s == "user_id"
               next unless has_required_id_validation?(instance, a.name)
 
               if a.macro == :has_one || a.macro == :belongs_to

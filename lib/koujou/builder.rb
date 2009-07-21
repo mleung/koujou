@@ -158,12 +158,12 @@ module Koujou #:nodoc:
             # If the validation is validates_length_of :name, :within => 1..20 (or in, which is an alias),
             # let's just return the minimum value of the range. 
             %w(within in).each do |o| 
-              return options[o.to_sym].entries.first   if options.has_key?(o.to_sym)
+              return options[o.to_sym].entries.first if options.has_key?(o.to_sym)
             end
             
             # These other validations should just return the value set.
             %w(is minimum maximum).each do |o|
-              return retval = options[o.to_sym] if options.has_key?(o.to_sym) 
+              return options[o.to_sym] if options.has_key?(o.to_sym) 
             end
             
             nil

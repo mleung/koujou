@@ -43,13 +43,11 @@ module Koujou #:nodoc:
             # they're required or not.
             instance.attributes = attributes unless attributes.nil?
             
-            # TODO: Think about moving all the following methods to 
-            # a separate class (save for the CustomValidation.stub_custom_validations!
-            #  method of course.)
             set_required_attributes!(instance, attributes)
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)
             set_length_validated_attributes!(instance, attributes)
+            set_inclusion_validated_attributes!(instance, attributes)
             create_associations(instance, recursed_from_model)
             CustomValidation.stub_custom_validations!(instance)
 
@@ -81,17 +79,31 @@ module Koujou #:nodoc:
             end
           end
           
-          def set_length_validated_attributes!(instance, attributes)
-            instance.class.length_validations.each do |v|
-              # We also handle length in set_unique_attributes! and set_required_attributes! so
-              # no need to worry about it here.
-              # FIXME: make a method that takes a block for these conditions.
-              next if has_unique_validation?(instance, v) || has_required_validation?(instance, v) ||
-                      overridden_attribute?(attributes, v.name)
-              
-              generate_and_set_data(instance, v, false)
+          # This generates set_length_validated_attributes! and set_inclusion_validated_attributes! methods.
+          # They used to look like this:
+          #
+          # def set_length_validated_attributes!(instance, attributes)
+          #   instance.class.length_validations.each do |v|
+          #     non_required_attributes(instance, v, attributes) { generate_and_set_data(instance, v, false) }
+          #   end
+          # end
+          #
+          # def set_inclusion_of_validated_attributes!(instance, attributes)
+          #   instance.class.inclusion_validations.each do |v|
+          #     non_required_attributes(instance, v, attributes) { generate_and_set_data(instance, v, false) }
+          #   end
+          # end
+          %w(length inclusion).each do |validation|
+            define_method("set_#{validation}_validated_attributes!") do |instance, attributes|
+              instance.class.send("#{validation}_validations").each do |v|
+                # Non required attributes are anything that doesn't have validates_presence_of, 
+                # validates_uniqueness_of and also anything that hasn't been overriden. These
+                # values get set there. So there's no real point in setting them again here. 
+                non_required_attributes(instance, v, attributes) { generate_and_set_data(instance, v, false) }
+              end
             end
           end
+          
 
           def set_confirmation_attributes!(instance, attributes)
             instance.class.confirmation_validations.each do |v|
@@ -100,6 +112,7 @@ module Koujou #:nodoc:
               instance.send("#{v.name}_confirmation=", instance.send("#{v.name}"))
             end
           end
+          
           
           def create_associations(instance, recursed_from_model = nil)
             # We loop through all the has_one or belongs_to associations on the current instance 
@@ -137,11 +150,19 @@ module Koujou #:nodoc:
           def generate_and_set_data(instance, validation, sequenced)
             data_generator = DataGenerator.new(sequenced, validation)
             data_generator.required_length = get_required_length(instance, validation)
+            if has_inclusion_validation?(instance, validation)
+              data_generator.inclusion_values = get_inclusion_values(instance, validation)
+            end
             instance.send("#{validation.name}=", data_generator.generate_data_for_column_type)
           end
           
           def standard_required_attributes(instance, validation)
             yield unless has_unique_validation?(instance, validation) 
+          end
+          
+          def non_required_attributes(instance, validation, attributes)
+            yield unless has_unique_validation?(instance, validation) || has_required_validation?(instance, validation) ||
+                    overridden_attribute?(attributes, validation.name)
           end
           
           def overridden_attribute?(attributes, key)
@@ -151,7 +172,7 @@ module Koujou #:nodoc:
           # This creates has_unique_validation?, has_length_validation? etc. 
           # We could probably make one method that takes a type, but I'd rather
           # get separate methods for each. Cool?
-          %w(unique length required).each do |v|
+          %w(unique length required inclusion).each do |v|
             define_method("has_#{v}_validation?") do |instance, validation|
               !instance.class.send("#{v}_validations").select{|u| u.name == validation.name }.empty?
             end
@@ -174,6 +195,13 @@ module Koujou #:nodoc:
             end
             
             nil
+          end
+          
+          def get_inclusion_values(instance, validation)
+            return unless has_inclusion_validation?(instance, validation) 
+            options = instance.class.inclusion_validations.select{|v| v.name == validation.name }.first.options
+            return unless options.has_key?(:in)
+            options[:in]
           end
           
           def has_required_id_validation?(instance, name)

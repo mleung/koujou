@@ -122,6 +122,20 @@ class TestBuilder < Test::Unit::TestCase
     
   end
   
+  context 'inclusion_of_validation' do
+    
+    should 'create the correct value for an attribute marked with validates_inclusion_of' do
+      c = Car.koujou
+      assert_equal 'Nissan', c.make
+    end
+    
+    should 'create the correct values for inclusion when it\'s not also a required attribute' do
+      c = Car.koujou
+      assert_equal 1900, c.year
+    end
+    
+  end
+  
   
 end
 

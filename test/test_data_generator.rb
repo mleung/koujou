@@ -48,7 +48,7 @@ class TestDataGenerator < Test::Unit::TestCase
     
   end
   
-  context "on generate with a required length" do
+  context 'on generate with a required length' do
     setup do
       @validation = mock("ActiveRecord::Reflection::MacroReflection")
       @validation.expects(:active_record).twice.returns(Post)
@@ -60,6 +60,28 @@ class TestDataGenerator < Test::Unit::TestCase
       data_generator.required_length = 20
       body = data_generator.generate_data_for_column_type
       assert_equal 20, body.size
+    end
+    
+  end
+  
+  context 'on generate with an inclusion' do
+    
+    setup do
+      @validation = mock("ActiveRecord::Reflection::MacroReflection")
+    end
+    
+    should 'generate the correct string with an inclusion_value passed in' do
+      data_generator = Koujou::DataGenerator.new(false, @validation)
+      data_generator.inclusion_values = %w(Nissan Subaru)
+      make = data_generator.generate_data_for_column_type
+      assert_equal 'Nissan', make
+    end
+    
+    should 'generate the correct int with an inclusion_value passed in' do
+      data_generator = Koujou::DataGenerator.new(false, @validation)
+      data_generator.inclusion_values = (1..3)
+      num = data_generator.generate_data_for_column_type
+      assert_equal 1, num
     end
     
   end

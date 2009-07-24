@@ -1,7 +1,7 @@
 module Koujou #:nodoc:
   class DataGenerator
 
-    attr_accessor :required_length
+    attr_accessor :required_length, :inclusion_values
     
     def initialize(sequenced, validation)
       @sequenced = sequenced
@@ -10,6 +10,10 @@ module Koujou #:nodoc:
     end
 
     def generate_data_for_column_type
+      # So if there was an inclusion passed in for validations_inclusion_of (which is just 
+      # an enumberable object), let's just return the first element to ensure the value
+      # set is the correct one. Mmmkay?
+      return get_first_value_for_inclusion unless @inclusion_values.nil?
       # Sometimes models have a validates_presence_of set, but there's no corresponding 
       # db column. The only example I can think of for this is a user model where the actual
       # column is hashed_password but the model requires the presence of password. So we'll 
@@ -25,13 +29,13 @@ module Koujou #:nodoc:
     end
     
     def generate_string
-      return format_if_sequenced(Faker::Internet.email)   if @validation.name.to_s.match(/email/)
-      return format_if_sequenced(Faker::Name.first_name)  if @validation.name.to_s == 'first_name'
-      return format_if_sequenced(Faker::Name.last_name)   if @validation.name.to_s == 'last_name'
-      return format_if_sequenced(Faker::Internet.user_name)   if @validation.name.to_s.match(/login|user_name/)
-      return format_if_sequenced(Faker::Address.city)     if @validation.name.to_s.match(/city/)
-      return format_if_sequenced(Faker::Address.us_state) if @validation.name.to_s.match(/state|province/)
-      return format_if_sequenced(Faker::Address.zip_code) if @validation.name.to_s.match(/zip|postal/)
+      return format_if_sequenced(Faker::Internet.email)     if @validation.name.to_s.match(/email/)
+      return format_if_sequenced(Faker::Name.first_name)    if @validation.name.to_s == 'first_name'
+      return format_if_sequenced(Faker::Name.last_name)     if @validation.name.to_s == 'last_name'
+      return format_if_sequenced(Faker::Internet.user_name) if @validation.name.to_s.match(/login|user_name/)
+      return format_if_sequenced(Faker::Address.city)       if @validation.name.to_s.match(/city/)
+      return format_if_sequenced(Faker::Address.us_state)   if @validation.name.to_s.match(/state|province/)
+      return format_if_sequenced(Faker::Address.zip_code)   if @validation.name.to_s.match(/zip|postal/)
 
       # If we don't match any standard stuff, just return a regular bs lorem string comprised of 10 words.
       # 10 is sort of a "magic number" I might make a constant for that.
@@ -76,6 +80,10 @@ module Koujou #:nodoc:
 
       def format_if_sequenced(val)
         @sequenced ? "#{Sequence.instance.next}#{val}" : val
+      end
+      
+      def get_first_value_for_inclusion
+        @inclusion_values.first
       end
       
   end

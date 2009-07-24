@@ -66,7 +66,7 @@ class ActiveRecordTestConnector
           t.boolean  "read"
         end
         create_table "cars", :force => true do |t|
-          t.integer "user_id"
+          t.integer "user_id", "year"
           t.string "make", "model"
         end
       end

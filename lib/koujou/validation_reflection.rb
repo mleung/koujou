@@ -94,7 +94,7 @@ module Koujou # :nodoc:
           end
         end
         
-        # A few convenience methods added in by Mike.
+        # A few convenience methods added in by Mike. Why not loop and define_method these?
         
         def unique_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_uniqueness_of }
@@ -110,6 +110,10 @@ module Koujou # :nodoc:
         
         def length_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_length_of || v.macro == :validates_size_of }
+        end
+        
+        def inclusion_validations
+          reflect_on_all_validations.select{|v| v.macro == :validates_inclusion_of }
         end
 
         def custom_validations

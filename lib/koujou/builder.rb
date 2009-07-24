@@ -48,6 +48,7 @@ module Koujou #:nodoc:
             set_confirmation_attributes!(instance, attributes)
             set_length_validated_attributes!(instance, attributes)
             create_associations(instance, recursed_from_model)
+            CustomValidation.stub_custom_validations!(instance)
 
             instance
           end

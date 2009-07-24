@@ -18,9 +18,21 @@ class User < ActiveRecord::Base
   
   attr_accessible :email, :password, :password_confirmation
   
+  validate :custom_validation_method
+  validate :custom_private_method
+  
   def password_required?
     true
   end
+  
+  def custom_validation_method
+    false
+  end
+  
+  private
+    def custom_private_method
+      false
+    end
   
   
 end

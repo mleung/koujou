@@ -8,6 +8,7 @@ require 'koujou/sequence'
 require 'koujou/builder'
 require 'koujou/data_generator'
 require 'koujou/validation_reflection'
+require 'koujou/custom_validation'
 
 module Koujou
   VERSION = '0.0.1'

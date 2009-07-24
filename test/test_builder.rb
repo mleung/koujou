@@ -105,6 +105,12 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil p.user
     end
     
+    should 'find custom validations' do
+      User.reflect_on_all_validations.each do |v|
+        puts v.inspect if v.macro == :validate
+      end
+    end
+    
   end
   
   

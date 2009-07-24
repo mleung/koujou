@@ -44,6 +44,7 @@ module Koujou # :nodoc:
          validates_numericality_of
          validates_presence_of
          validates_uniqueness_of
+         validate
       )
 
       mattr_accessor :in_ignored_subvalidation
@@ -109,6 +110,11 @@ module Koujou # :nodoc:
         
         def length_validations
           reflect_on_all_validations.select{|v| v.macro == :validates_length_of || v.macro == :validates_size_of }
+        end
+
+        def custom_validations
+          # We don't want to get anything like: validate_associated_records_for_posts.
+          reflect_on_all_validations.select{|v| v.macro == :validate && !v.macro.to_s.match("_associated_") }
         end
         
         private

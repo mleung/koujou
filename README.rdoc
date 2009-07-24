@@ -10,6 +10,9 @@ off.
 
 Check out: http://www.michaelleung.us/koujou for all the juicy details.
 
+Please note this is a very early release of koujou, so if you find any issues, just post
+them here: http://github.com/mleung/koujou/issues
+
 == INSTALL:
 
 gem install mleung-koujou --source http://gems.github.com

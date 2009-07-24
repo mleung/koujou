@@ -93,6 +93,7 @@ module Koujou #:nodoc:
           #     non_required_attributes(instance, v, attributes) { generate_and_set_data(instance, v, false) }
           #   end
           # end
+          # I'm sure you see the similarities. 
           %w(length inclusion).each do |validation|
             define_method("set_#{validation}_validated_attributes!") do |instance, attributes|
               instance.class.send("#{validation}_validations").each do |v|

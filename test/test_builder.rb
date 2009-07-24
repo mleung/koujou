@@ -6,7 +6,7 @@ class TestBuilder < Test::Unit::TestCase
   ActiveRecordTestConnector.setup
 
   context 'ActiveRecord' do
-
+  
     should 'have the koujou method' do
       assert User.respond_to?(:koujou)
     end
@@ -58,7 +58,7 @@ class TestBuilder < Test::Unit::TestCase
   end
   
   context 'on sending the koujou_create message' do
-
+  
     should 'persist the record to the db' do
       u = User.koujou_create
       assert !u.new_record?

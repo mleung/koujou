@@ -62,7 +62,8 @@ module Koujou #:nodoc:
                 # We don't want to set anything if the user passed in data for this field
                 # or if this is a validates_presence_of :some_id. The ids will be set
                 # when we create the association.
-                next if overridden_attribute?(attributes, v.name) || has_required_id_validation?(instance, v.name)
+                next if overridden_attribute?(attributes, v.name)
+                # has_required_id_validation?(instance, v.name)
                 
                 generate_and_set_data(instance, v, false)
               end
@@ -105,7 +106,7 @@ module Koujou #:nodoc:
               # We only want to create the association if the user has required the id field. 
               # This will build the minimum valid requirements. 
               next unless has_required_id_validation?(instance, a.name)
-
+              
               if a.macro == :has_one || a.macro == :belongs_to
                 # If there's a two way association here (user has_one profile, profile belongs_to user)
                 # we only want to create one of those, or it'll recurse forever. That's what the 
@@ -132,7 +133,7 @@ module Koujou #:nodoc:
           def generate_and_set_data(instance, validation, sequenced)
             data_generator = DataGenerator.new(sequenced, validation)
             data_generator.required_length = get_required_length(instance, validation)
-            instance.write_attribute(validation.name, data_generator.generate_data_for_column_type)
+            instance.send("#{validation.name}=", data_generator.generate_data_for_column_type)
           end
           
           def standard_required_attributes(instance, validation)
@@ -174,7 +175,7 @@ module Koujou #:nodoc:
           def has_required_id_validation?(instance, name)
             !instance.class.required_validations.select{|v| v.name.to_s  == "#{name}_id" }.empty?
           end
-                                      
+          
       end
       
     end

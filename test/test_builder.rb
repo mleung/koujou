@@ -113,6 +113,15 @@ class TestBuilder < Test::Unit::TestCase
     
   end
   
+  context 'custom validations' do
+    
+    should 'totally override any custom validations, and thus not fail when we call koujou' do
+      p = Post.koujou
+      assert true
+    end
+    
+  end
+  
   
 end
 

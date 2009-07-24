@@ -4,4 +4,12 @@ class Post < ActiveRecord::Base
   
   belongs_to :user
   has_many :comments
+  
+  validate :craziness
+  
+  protected
+    def craziness
+      raise 'No way Jose' if "Matz" != "Guido van Rossum"
+    end
+  
 end

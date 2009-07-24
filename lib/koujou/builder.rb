@@ -42,7 +42,10 @@ module Koujou #:nodoc:
             # This will allow attributes to be set regardless if
             # they're required or not.
             instance.attributes = attributes unless attributes.nil?
-
+            
+            # TODO: Think about moving all the following methods to 
+            # a separate class (save for the CustomValidation.stub_custom_validations!
+            #  method of course.)
             set_required_attributes!(instance, attributes)
             set_unique_attributes!(instance, attributes)
             set_confirmation_attributes!(instance, attributes)

@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Koujou is a fixture replacement that requires no effort to use}
   s.test_files = ["test/test_builder.rb", "test/test_data_generator.rb", "test/test_helper.rb", "test/test_kojo.rb", "test/test_sequence.rb"]
+  s.add_dependency('faker', '>= 0.3.1')
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

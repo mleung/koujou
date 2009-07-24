@@ -13,7 +13,6 @@ lib/koujou/validation_reflection.rb
 script/console
 script/destroy
 script/generate
-test.sqlite3
 test/lib/active_record_test_connector.rb
 test/lib/models/car.rb
 test/lib/models/comment.rb

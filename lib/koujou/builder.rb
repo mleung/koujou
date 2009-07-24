@@ -1,5 +1,3 @@
-# FIXME: We should probably only duck punch this in if it's the test environment. Figure that out. 
-
 module Koujou #:nodoc:
   module ActiveRecordExtensions # :nodoc:
     module Builder # :nodoc:

@@ -8,7 +8,7 @@ Koujou is a fixture replacement that requires no effort to use. You don't have t
 in your test_helper or whatever. Just call the koujou method on your active record model, and you're 
 off. 
 
-check out: http://www.michaelleung.us/koujou for all the juicy details.
+Check out: http://www.michaelleung.us/koujou for all the juicy details.
 
 == INSTALL:
 

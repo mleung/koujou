@@ -63,7 +63,6 @@ module Koujou #:nodoc:
                 # or if this is a validates_presence_of :some_id. The ids will be set
                 # when we create the association.
                 next if overridden_attribute?(attributes, v.name)
-                # has_required_id_validation?(instance, v.name)
                 
                 generate_and_set_data(instance, v, false)
               end

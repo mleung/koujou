@@ -109,6 +109,11 @@ class TestBuilder < Test::Unit::TestCase
       assert_equal 2, User.custom_validations.size
     end
     
+    should 'car should have an owner association to user via class_name' do
+      c = Car.koujou
+      assert_not_nil c.owner
+    end
+    
   end
   
   context 'custom validations' do

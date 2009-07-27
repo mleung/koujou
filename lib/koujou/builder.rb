@@ -120,7 +120,7 @@ module Koujou #:nodoc:
             instance.class.reflect_on_all_associations.each do |a|
               # We only want to create the association if the user has required the id field. 
               # This will build the minimum valid requirements. 
-              next unless has_required_id_validation?(instance, a.name)
+              next unless has_required_id_validation?(instance, a)
               
               if a.macro == :has_one || a.macro == :belongs_to
                 # If there's a two way association here (user has_one profile, profile belongs_to user)
@@ -197,7 +197,8 @@ module Koujou #:nodoc:
             options[:in]
           end
           
-          def has_required_id_validation?(instance, name)
+          def has_required_id_validation?(instance, association)
+            name = association.options.has_key?(:class_name) ? association.options[:class_name].downcase : association.name
             !instance.class.required_validations.select{|v| v.name.to_s  == "#{name}_id" }.empty?
           end
           

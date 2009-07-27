@@ -118,7 +118,7 @@ module Koujou # :nodoc:
 
         def custom_validations
           # We don't want to get anything like: validate_associated_records_for_posts.
-          reflect_on_all_validations.select{|v| v.macro == :validate && !v.macro.to_s.match("_associated_") }
+          reflect_on_all_validations.select{|v| v.macro == :validate && v.name.to_s.match("_associated_").nil? }
         end
         
         private

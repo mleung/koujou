@@ -106,9 +106,7 @@ class TestBuilder < Test::Unit::TestCase
     end
     
     should 'find custom validations' do
-      User.reflect_on_all_validations.each do |v|
-        puts v.inspect if v.macro == :validate
-      end
+      assert_equal 2, User.custom_validations.size
     end
     
   end

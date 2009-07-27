@@ -7,6 +7,8 @@ module Koujou #:nodoc:
       @sequenced = sequenced
       # Validation is actually a ActiveRecord::Reflection::MacroReflection
       @validation = validation
+      @required_length = nil
+      @inclusion_values = nil
     end
 
     def generate_data_for_column_type

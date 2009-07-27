@@ -35,6 +35,7 @@ class ActiveRecordTestConnector
       ActiveRecord::Schema.define do
         create_table "users", :force => true do |t|
           t.string "name", "email", "first_name", "last_name", "hashed_password"
+          t.text "about"
           t.integer "age"
           t.float "salary"
           t.datetime "hired_on"

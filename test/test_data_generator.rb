@@ -35,6 +35,12 @@ class TestDataGenerator < Test::Unit::TestCase
       assert_match(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, email)
     end
     
+    should 'genreate valid text field values' do
+      @validation.expects(:name).twice.returns('about')
+      body = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
+      assert_not_nil body
+    end
+    
     should 'generate a valid datetime' do
       @validation.expects(:name).twice.returns('hired_on')
       dt = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type

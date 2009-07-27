@@ -60,10 +60,6 @@ module Koujou # :nodoc:
         reflected_validations.each do |validation_type|
           next if base.respond_to?("#{validation_type}_with_reflection")
           ignore_subvalidations = false
-          if validation_type.kind_of?(Hash)
-            ignore_subvalidations = validation_type[:ignore_subvalidations]
-            validation_type = validation_type[:method]
-          end
           base.class_eval <<-"end_eval"
             class << self
               def #{validation_type}_with_reflection(*attr_names)

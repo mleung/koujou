@@ -11,12 +11,13 @@ require 'koujou/validation_reflection'
 require 'koujou/custom_validation'
 
 module Koujou
-  VERSION = '0.0.1'
+  VERSION = '0.0.4'
 end
 
-ActiveRecord::Base.class_eval do
-  include Koujou::ActiveRecordExtensions::ValidationReflection
-  Koujou::ActiveRecordExtensions::ValidationReflection.install(self)
-  include Koujou::ActiveRecordExtensions::Builder
+if ENV["RAILS_ENV"] == "test"
+  ActiveRecord::Base.class_eval do
+    include Koujou::ActiveRecordExtensions::ValidationReflection
+    Koujou::ActiveRecordExtensions::ValidationReflection.install(self)
+    include Koujou::ActiveRecordExtensions::Builder
+  end
 end
-

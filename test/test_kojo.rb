@@ -7,6 +7,5 @@ class TestKoujou < Test::Unit::TestCase
   
   def test_truth
     assert true
-    # assert User.respond_to?(:koujou)
   end
 end

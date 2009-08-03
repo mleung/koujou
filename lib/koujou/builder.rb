@@ -101,7 +101,6 @@ module Koujou #:nodoc:
               end
             end
           end
-          
 
           def set_confirmation_attributes!(instance, attributes)
             instance.class.confirmation_validations.each do |v|
@@ -110,7 +109,6 @@ module Koujou #:nodoc:
               instance.send("#{v.name}_confirmation=", instance.send("#{v.name}"))
             end
           end
-          
           
           def create_associations(instance, recursed_from_model = nil)
             # We loop through all the has_one or belongs_to associations on the current instance 

@@ -179,13 +179,21 @@ module Koujou #:nodoc:
             
             options = instance.class.length_validations.select{|v| v.name == validation.name }.first.options
             
+            retval = nil
             # If the validation is validates_length_of :name, :within => 1..20 (or in, which is an alias),
             # let's just return the minimum value of the range. 
-            %w(within in).each { |o| return options[o.to_sym].entries.first if options.has_key?(o.to_sym) }
-            # These other validations should just return the value set.
-            %w(is minimum maximum).each { |o| return options[o.to_sym] if options.has_key?(o.to_sym)  }
-            
-            nil
+            %w(within in).each do |o| 
+              retval = options[o.to_sym].entries.first if options.has_key?(o.to_sym)
+              break
+            end
+            if retval.nil?
+              # These other validations should just return the value set.
+              %w(is minimum maximum).each do |o| 
+                retval = options[o.to_sym] if options.has_key?(o.to_sym)  
+                break
+              end
+            end
+            retval
           end
           
           def get_inclusion_values(instance, validation)

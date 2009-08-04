@@ -191,7 +191,6 @@ module Koujou #:nodoc:
           def get_inclusion_values(instance, validation)
             return unless has_inclusion_validation?(instance, validation) 
             options = instance.class.inclusion_validations.select{|v| v.name == validation.name }.first.options
-            return unless options.has_key?(:in)
             options[:in]
           end
           

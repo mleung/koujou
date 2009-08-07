@@ -23,7 +23,7 @@ class TestDataGenerator < Test::Unit::TestCase
     end
     
     should 'generate a valid string' do
-      @validation.expects(:name).times(1..10).returns('name')
+      @validation.expects(:name).at_least_once.returns('name')
       string = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
       assert_kind_of String, string
       assert string.size > 0
@@ -51,7 +51,32 @@ class TestDataGenerator < Test::Unit::TestCase
       @validation.expects(:name).twice.returns('terms_of_service')
       assert Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
     end
-    
+  end
+
+  context 'on generate for attributes that are not columns' do
+    setup do
+      @validation = mock("ActiveRecord::Reflection::MacroReflection")
+      @validation.expects(:active_record).once.returns(User)
+    end
+
+    should 'always generate "koujourama" for passwords' do
+      @validation.expects(:name).at_least_once.returns('password')
+      assert_equal "koujourama", Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
+    end
+
+    should 'always generate "koujourama" for password confirmations' do
+      @validation.expects(:name).at_least_once.returns('password_confirmation')
+      assert_equal "koujourama", Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type      
+    end
+
+    should 'always generate the same for password and password confirmations' do
+      @validation.expects(:name).at_least_once.returns('password')
+      password = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
+      @validation.expects(:active_record).once.returns(User)
+      @validation.expects(:name).at_least_once.returns('password_confirmation')
+      password_confirmation = Koujou::DataGenerator.new(false, @validation).generate_data_for_column_type
+      assert_equal password, password_confirmation
+    end
   end
   
   context 'on generate with a required length' do

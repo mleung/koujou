@@ -90,7 +90,11 @@ class TestBuilder < Test::Unit::TestCase
       p = Post.koujou_build(:name => clever)
       assert_equal clever, p.name
     end
-    
+
+    should 'cause a model to be invalid if you override a field that has validates_presence_of with a nil value' do
+      u = User.koujou_build(:email => nil)
+      assert !u.valid?
+    end
   end
   
   context 'associations' do

@@ -62,9 +62,9 @@ module Koujou # :nodoc:
           ignore_subvalidations = false
           base.class_eval <<-"end_eval"
             class << self
-              def #{validation_type}_with_reflection(*attr_names)
+              def #{validation_type}_with_reflection(*attr_names, &block)
                 ignoring_subvalidations(#{ignore_subvalidations}) do
-                  #{validation_type}_without_reflection(*attr_names)
+                  #{validation_type}_without_reflection(*attr_names, &block)
                   remember_validation_metadata(:#{validation_type}, *attr_names)
                 end
               end

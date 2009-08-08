@@ -1,4 +1,4 @@
-= koujou
+= Koujou
 
 * http://github.com/mleung/koujou
 

@@ -11,7 +11,7 @@ require 'koujou/validation_reflection'
 require 'koujou/custom_validation'
 
 module Koujou
-  VERSION = '0.0.6'
+  VERSION = '0.1.0'
 end
 
 if ENV["RAILS_ENV"] == "test"

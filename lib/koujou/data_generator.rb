@@ -49,8 +49,6 @@ module Koujou #:nodoc:
         retval = format_if_sequenced(Faker::Address.us_state)
       elsif @validation.name.to_s.match(/zip|postal/)
         retval =  format_if_sequenced(Faker::Address.zip_code)
-      elsif @validation.name.to_s == 'password' || @validation.name.to_s == 'password_confirmation'
-        retval = 'koujourama'
       else
         # If we don't match any standard stuff, just return a regular bs lorem string comprised of 10 words.
         # 10 is sort of a "magic number" I might make a constant for that.

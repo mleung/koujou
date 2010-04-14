@@ -41,6 +41,11 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil u.password_confirmation
     end
     
+    should 'have the same value for password_confirmation as password' do
+      u = User.koujou
+      assert_equal u.password, u.password_confirmation
+    end
+    
     should 'allow me to override the model attributes' do
       namae = 'One Factory to Rule them all'
       p = Post.koujou(true, :name => namae)

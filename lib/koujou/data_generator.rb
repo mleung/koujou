@@ -83,6 +83,10 @@ module Koujou #:nodoc:
     def generate_date
       DateTime.now.to_date
     end
+
+    def generate_time
+      Time.now
+    end
     
     def generate_boolean
       true

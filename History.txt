@@ -2,3 +2,9 @@
 
 * 1 major enhancement:
   * Initial release
+
+=== 0.1.3 2010-05-27
+
+* 2 small fixes:
+  * fix for how Koujou deals with polymorphic associations, ensuring that it leaves polymorphic fields up to the user to populate
+  * fix to ignore the inheritance column and not generate data for it when working with STI models

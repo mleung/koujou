@@ -72,6 +72,9 @@ class ActiveRecordTestConnector
           t.integer "user_id", "year"
           t.string "make", "model"
         end
+        create_table "invites", :force => true do |t|
+          t.string "type"
+        end
       end
     end
      

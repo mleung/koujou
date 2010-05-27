@@ -146,6 +146,8 @@ module Koujou #:nodoc:
           end
           
           def generate_and_set_data(instance, validation, sequenced)
+            # Don't set if it's the inheritance column
+            return if validation.name.to_s == instance.class.inheritance_column.to_s
             # Don't set values for polymorphic association fields - if no values are supplied we'll want that to just fall through to validation errors
             return if instance.class.reflect_on_all_associations.select { |a| a.options.keys.include?(:polymorphic) && a.options[:polymorphic] == true }.collect { |a| [:"#{a.name}_id", :"#{a.name}_type"] }.flatten.include?(validation.name)
             data_generator = DataGenerator.new(sequenced, validation)

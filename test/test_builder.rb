@@ -162,6 +162,18 @@ class TestBuilder < Test::Unit::TestCase
       assert_equal p.id, c.commentable.id
     end
   end
+
+  context "using STI" do
+    should "not be setting the type field to something random" do
+      @event_invite = EventInvite.koujou
+      assert_equal 1, EventInvite.all.length
+      assert_equal "EventInvite", @event_invite.reload.type
+      @group_invite = GroupInvite.koujou
+      assert_equal 1, GroupInvite.all.length
+      assert_equal "GroupInvite", @group_invite.reload.type
+      assert_equal 2, Invite.all.length
+    end
+  end
   
 end
 

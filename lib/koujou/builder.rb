@@ -119,6 +119,8 @@ module Koujou #:nodoc:
               # We only want to create the association if the user has required the id field. 
               # This will build the minimum valid requirements. 
               next unless has_required_id_validation?(instance, a)
+              # Skip polymorphic associations as we don't know what to build for them
+              next if a.options.keys.include?(:polymorphic) && a.options[:polymorphic] == true
               
               if a.macro == :has_one || a.macro == :belongs_to
                 # If there's a two way association here (user has_one profile, profile belongs_to user)
@@ -144,6 +146,8 @@ module Koujou #:nodoc:
           end
           
           def generate_and_set_data(instance, validation, sequenced)
+            # Don't set values for polymorphic association fields - if no values are supplied we'll want that to just fall through to validation errors
+            return if instance.class.reflect_on_all_associations.select { |a| a.options.keys.include?(:polymorphic) && a.options[:polymorphic] == true }.collect { |a| [:"#{a.name}_id", :"#{a.name}_type"] }.flatten.include?(validation.name)
             data_generator = DataGenerator.new(sequenced, validation)
             data_generator.required_length = get_required_length(instance, validation)
             if has_inclusion_validation?(instance, validation)

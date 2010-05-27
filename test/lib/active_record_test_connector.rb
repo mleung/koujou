@@ -49,6 +49,8 @@ class ActiveRecordTestConnector
         create_table "comments", :force => true do |t|
           t.text "bod"
           t.integer "post_id"
+          t.integer "commentable_id"
+          t.string "commentable_type"
         end
         create_table "profiles", :force => true do |t|
           t.integer "user_id"

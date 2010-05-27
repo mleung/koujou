@@ -71,7 +71,8 @@ class TestBuilder < Test::Unit::TestCase
     
     should 'allow me to override the model attributes' do
       comment = 'your post is epic fail'
-      c = Comment.koujou_create(:bod => comment)
+      p = Post.koujou
+      c = Comment.koujou_create(:bod => comment, :commentable_id => p.id, :commentable_type => p.class.name)
       assert_equal comment, c.bod
     end
     
@@ -80,7 +81,6 @@ class TestBuilder < Test::Unit::TestCase
       # The first digit should not be an integer.
       assert_equal 0, u.first_name[0,1].to_i
     end
-    
   end
   
   context 'on sending the koujou_build message' do
@@ -147,7 +147,21 @@ class TestBuilder < Test::Unit::TestCase
     end
     
   end
-  
+
+  context "using polymorphic associations" do
+    should "leave the association alone and not validate if no values supplied" do
+      ex = assert_raise ActiveRecord::RecordInvalid do
+        c = Comment.koujou(true, :bod => "test body")
+      end
+      assert_equal "Validation failed: Commentable can't be blank, Commentable type can't be blank", ex.message
+    end
+
+    should "work when supplying the polymorphic fields" do
+      p = Post.koujou
+      c = Comment.koujou(true, :bod => "test body", :commentable_type => p.class.name, :commentable_id => p.id)
+      assert_equal p.id, c.commentable.id
+    end
+  end
   
 end
 

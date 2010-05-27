@@ -16,6 +16,7 @@ script/generate
 test/lib/active_record_test_connector.rb
 test/lib/models/car.rb
 test/lib/models/comment.rb
+test/lib/models/invite.rb
 test/lib/models/message.rb
 test/lib/models/photo.rb
 test/lib/models/post.rb

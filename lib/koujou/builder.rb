@@ -116,6 +116,8 @@ module Koujou #:nodoc:
             # required the id (e.g. requires_presence_of :user_id). So we're only going to build 
             # the minimum requirements for each model. 
             instance.class.reflect_on_all_associations.each do |a|
+              # We don't want to generate the class if the user overrode it.
+              # next if overridden_attribute?(instance.attributes, "#{a.name}_id")
               # We only want to create the association if the user has required the id field. 
               # This will build the minimum valid requirements. 
               next unless has_required_id_validation?(instance, a)

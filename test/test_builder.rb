@@ -123,6 +123,11 @@ class TestBuilder < Test::Unit::TestCase
       assert_not_nil c.owner
     end
     
+    should "not create the association if I explicitly overrode it" do
+      c = Car.koujou(true, :user_id => 15)
+      assert_equal 15, c.user_id
+    end
+    
   end
   
   context 'custom validations' do
